@@ -1,8 +1,3 @@
-"""Service Queue — Starter
-
-Simulate a simple customer queue with pure functions.
-Implement without mutating inputs.
-"""
 from typing import List, Tuple
 
 
@@ -11,7 +6,9 @@ def take_next(queue: List[str]) -> Tuple[str | None, List[str]]:
 
     If queue is empty, return (None, []).
     """
-    raise NotImplementedError
+    if not queue:
+        return None, []
+    return queue[0], queue[1:]
 
 
 def move_to_back(queue: List[str], name: str) -> List[str]:
@@ -19,7 +16,11 @@ def move_to_back(queue: List[str], name: str) -> List[str]:
 
     If `name` is not present, return the queue unchanged (new list).
     """
-    raise NotImplementedError
+    if name not in queue:
+        return list(queue)  # new list, unchanged
+
+    idx = queue.index(name)
+    return queue[:idx] + queue[idx+1:] + [name]
 
 
 def interleave(q1: List[str], q2: List[str]) -> List[str]:
@@ -27,4 +28,16 @@ def interleave(q1: List[str], q2: List[str]) -> List[str]:
 
     After the shorter queue runs out, append the rest.
     """
-    raise NotImplementedError
+    result = []
+    n1, n2 = len(q1), len(q2)
+    m = min(n1, n2)
+
+    for i in range(m):
+        result.append(q1[i])
+        result.append(q2[i])
+
+    # Append leftovers
+    result.extend(q1[m:])
+    result.extend(q2[m:])
+
+    return result
